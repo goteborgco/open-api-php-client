@@ -33,74 +33,6 @@ $api = new API($apiUrl, $subscriptionKey);
 
 ## Usage
 
-### General GraphQL Queries
-
-The API provides a general-purpose query method for executing any GraphQL query. This method accepts raw GraphQL syntax and returns the unprocessed API response:
-
-```php
-$query = <<<GQL
-    query {
-        guides(filter: { lang: "sv", per_page: 10, page: 1 }) {
-            guides {
-                date
-                dates {
-                    end
-                    start
-                }
-                excerpt
-                title
-            }
-        }
-    }
-GQL;
-
-$result = $api->query($query);
-```
-
-#### Query Structure
-
-The query method expects a complete GraphQL query string. The query must:
-- Start with the `query` keyword
-- Include any necessary filters in the GraphQL syntax
-- Specify all required fields and nested structures
-
-Examples of valid queries:
-
-```php
-// Simple query with basic fields
-$result = $api->query('
-    query {
-        guides {
-            guides {
-                id
-                title
-            }
-        }
-    }
-');
-```
-
-#### Error Handling
-
-The query method will throw exceptions for:
-- Empty queries
-- Invalid GraphQL syntax
-- API errors
-
-Always wrap query calls in try-catch blocks:
-
-```php
-try {
-    $result = $api->query($query);
-} catch (\InvalidArgumentException $e) {
-    // Handle empty or invalid queries
-    echo "Query Error: " . $e->getMessage();
-} catch (\Exception $e) {
-    // Handle API errors
-    echo "API Error: " . $e->getMessage();
-}
-```
-
 ### Type-Specific Methods
 
 While the general query method provides full flexibility, the API also includes type-specific methods for common operations. These methods provide:
@@ -628,6 +560,74 @@ $result = $api->guides()->getById(
         ]
     ]
 );
+```
+
+### General GraphQL Queries
+
+The API provides a general-purpose query method for executing any GraphQL query. This method accepts raw GraphQL syntax and returns the unprocessed API response:
+
+```php
+$query = <<<GQL
+    query {
+        guides(filter: { lang: "sv", per_page: 10, page: 1 }) {
+            guides {
+                date
+                dates {
+                    end
+                    start
+                }
+                excerpt
+                title
+            }
+        }
+    }
+GQL;
+
+$result = $api->query($query);
+```
+
+#### Query Structure
+
+The query method expects a complete GraphQL query string. The query must:
+- Start with the `query` keyword
+- Include any necessary filters in the GraphQL syntax
+- Specify all required fields and nested structures
+
+Examples of valid queries:
+
+```php
+// Simple query with basic fields
+$result = $api->query('
+    query {
+        guides {
+            guides {
+                id
+                title
+            }
+        }
+    }
+');
+```
+
+#### Error Handling
+
+The query method will throw exceptions for:
+- Empty queries
+- Invalid GraphQL syntax
+- API errors
+
+Always wrap query calls in try-catch blocks:
+
+```php
+try {
+    $result = $api->query($query);
+} catch (\InvalidArgumentException $e) {
+    // Handle empty or invalid queries
+    echo "Query Error: " . $e->getMessage();
+} catch (\Exception $e) {
+    // Handle API errors
+    echo "API Error: " . $e->getMessage();
+}
 ```
 
 This array structure will be automatically converted to the equivalent GraphQL fields string internally. 
