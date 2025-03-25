@@ -1,0 +1,26 @@
+{
+    "name": "gbgco/php-api-client",
+    "description": "Official PHP API Client for Göteborg & Co's GraphQL API",
+    "type": "library",
+    "require": {
+        "php": ">=7.4",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "GBGCO\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adam Alexandersson",
+            "email": "adam.alexandersson@consid.se",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "stable",
+    "exclude-from-classmap": [
+        "/index.php"
+    ]
+} 
