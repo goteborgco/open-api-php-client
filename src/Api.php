@@ -6,6 +6,8 @@ use GBGCO\Types\Guides;
 use GBGCO\Types\Events;
 use GBGCO\Types\Places;
 use GBGCO\Types\Search;
+use GBGCO\Types\Taxonomies;
+use GBGCO\Types\Taxonomy;
 
 class Api
 {
@@ -14,6 +16,8 @@ class Api
     private ?Events $events = null;
     private ?Places $places = null;
     private ?Search $search = null;
+    private ?Taxonomies $taxonomies = null;
+    private ?Taxonomy $taxonomy = null;
 
     public function __construct(string $apiUrl, string $subscriptionKey)
     {
@@ -72,5 +76,27 @@ class Api
             $this->search = new Search($this->client);
         }
         return $this->search;
+    }
+
+    /**
+     * Get the Taxonomies API
+     */
+    public function taxonomies(): Taxonomies
+    {
+        if ($this->taxonomies === null) {
+            $this->taxonomies = new Taxonomies($this->client);
+        }
+        return $this->taxonomies;
+    }
+
+    /**
+     * Get the Taxonomy API for querying specific taxonomies
+     */
+    public function taxonomy(): Taxonomy
+    {
+        if ($this->taxonomy === null) {
+            $this->taxonomy = new Taxonomy($this->client);
+        }
+        return $this->taxonomy;
     }
 } 

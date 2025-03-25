@@ -513,6 +513,108 @@ foreach ($results->results as $item) {
 }
 ```
 
+### Taxonomies
+
+The API provides methods to list all available taxonomies. This is useful for getting an overview of all taxonomy types in the system.
+
+```php
+$fields = <<<GQL
+    name
+    description
+    value
+    types
+GQL;
+
+$taxonomies = $api->taxonomies()->list(
+    ['lang' => 'sv'],
+    $fields
+);
+
+// Work with taxonomy results
+foreach ($taxonomies as $taxonomy) {
+    echo $taxonomy->getName();
+    echo $taxonomy->getDescription();
+    echo $taxonomy->getValue();
+    
+    // Access available types
+    foreach ($taxonomy->getTypes() as $type) {
+        echo $type;
+    }
+}
+```
+
+### Taxonomy
+
+The API provides methods to list all terms within a specific taxonomy. Terms can be retrieved either as a flat list or as a hierarchical tree structure based on parent-child relationships.
+
+#### Listing Taxonomy Terms (Flat)
+
+```php
+$fields = <<<GQL
+    id
+    name
+    count
+    description
+    parent
+GQL;
+
+$terms = $api->taxonomy()->list(
+    taxonomyName: 'categories',
+    filter: ['lang' => 'sv'],
+    fields: $fields
+);
+
+// Work with taxonomy terms
+foreach ($terms as $term) {
+    echo $term->getId();
+    echo $term->getName();
+    echo $term->getCount();
+    echo $term->getDescription();
+    
+    if ($term->getParent() !== null) {
+        echo "Parent ID: " . $term->getParent();
+    }
+}
+```
+
+#### Listing Taxonomy Terms (Hierarchical)
+
+When working with hierarchical taxonomies like categories, you can retrieve terms in a tree structure:
+
+```php
+$fields = <<<GQL
+    id
+    name
+    count
+    description
+    parent
+GQL;
+
+$tree = $api->taxonomy()->list(
+    taxonomyName: 'categories',
+    filter: ['lang' => 'sv'],
+    fields: $fields,
+    hierarchical: true
+);
+
+// Work with hierarchical structure
+foreach ($tree as $node) {
+    $term = $node['term'];
+    echo $term->getName() . '<br>';
+    
+    // Process children
+    foreach ($node['children'] as $childNode) {
+        $childTerm = $childNode['term'];
+        echo "- " . $childTerm->getName() . '<br>';
+        
+        // Process grandchildren
+        foreach ($childNode['children'] as $grandchildNode) {
+            echo "-- " . $grandchildNode['term']->getName() . '<br>';
+        }
+    }
+}
+```
+
 ## Notes
 
 - Empty fields are not allowed and will throw an `InvalidArgumentException`
