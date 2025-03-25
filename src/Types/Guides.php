@@ -3,6 +3,8 @@
 namespace GBGCO\Types;
 
 use GBGCO\Client;
+use GBGCO\Types\Entities\WpEntity;
+use GBGCO\Types\Entities\Related;
 
 class Guides
 {
@@ -18,7 +20,7 @@ class Guides
      *
      * @param array $filter Filter parameters (lang, per_page, page)
      * @param array|string $fields Fields to retrieve, either as an array or GraphQL fields string
-     * @return array<object>
+     * @return WpEntity[]
      */
     public function list(array $filter = [], array|string $fields = []): array
     {
@@ -33,7 +35,7 @@ class Guides
         $result = $this->client->execute($query);
         $guides = $result['guides']['guides'];
 
-        return array_map(fn($guide) => json_decode(json_encode($guide)), $guides);
+        return array_map(fn($guide) => new WpEntity($guide), $guides);
     }
 
     /**
@@ -42,7 +44,7 @@ class Guides
      * @param int $id Guide ID
      * @param string $lang Language code (e.g., 'sv')
      * @param array|string $fields Fields to retrieve, either as an array or GraphQL fields string
-     * @return object
+     * @return object{guide: WpEntity, related: Related}
      */
     public function getById(int $id, string $lang = 'sv', array|string $fields = []): object
     {
@@ -50,7 +52,12 @@ class Guides
         $query = $this->buildByIdQuery($id, $lang, $fieldsStr);
 
         $result = $this->client->execute($query);
-        return json_decode(json_encode($result['guideById']));
+        $data = $result['guideById'];
+
+        return (object) [
+            'guide' => new WpEntity($data['guide'] ?? []),
+            'related' => isset($data['related']) ? new Related($data['related']) : null
+        ];
     }
 
     /**
@@ -117,7 +124,9 @@ class Guides
         return <<<GQL
         query {
             guides {
-                $fields
+                guides {
+                    $fields
+                }
             }
         }
         GQL;
@@ -131,7 +140,9 @@ class Guides
         return <<<GQL
         query {
             guides(filter: { $filterStr }) {
-                $fields
+                guides {
+                    $fields
+                }
             }
         }
         GQL;
