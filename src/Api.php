@@ -5,6 +5,7 @@ namespace GBGCO;
 use GBGCO\Types\Guides;
 use GBGCO\Types\Events;
 use GBGCO\Types\Places;
+use GBGCO\Types\Search;
 
 class Api
 {
@@ -12,6 +13,7 @@ class Api
     private ?Guides $guides = null;
     private ?Events $events = null;
     private ?Places $places = null;
+    private ?Search $search = null;
 
     public function __construct(string $apiUrl, string $subscriptionKey)
     {
@@ -59,5 +61,16 @@ class Api
             $this->places = new Places($this->client);
         }
         return $this->places;
+    }
+
+    /**
+     * Get the Search API
+     */
+    public function search(): Search
+    {
+        if ($this->search === null) {
+            $this->search = new Search($this->client);
+        }
+        return $this->search;
     }
 } 

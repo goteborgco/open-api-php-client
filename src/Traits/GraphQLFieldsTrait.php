@@ -65,4 +65,23 @@ trait GraphQLFieldsTrait
         }
         return implode(', ', $filterArgs);
     }
+
+    /**
+     * Build sort arguments string from array
+     */
+    private function buildSortString(array $sort): string
+    {
+        if (empty($sort['fields']) || empty($sort['orders'])) {
+            return '';
+        }
+
+        $fields = is_array($sort['fields']) ? $sort['fields'] : [$sort['fields']];
+        $orders = is_array($sort['orders']) ? $sort['orders'] : [$sort['orders']];
+
+        return sprintf(
+            'sortBy: { fields: [%s], orders: [%s] }',
+            implode(', ', array_map(fn($field) => "\"$field\"", $fields)),
+            implode(', ', $orders)
+        );
+    }
 } 
