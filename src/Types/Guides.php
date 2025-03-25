@@ -21,7 +21,14 @@ class Guides
     /**
      * List guides with specified filters and fields
      *
-     * @param array $filter Filter parameters (lang, per_page, page)
+     * @param array $filter Filter options:
+     *                      - lang: string
+     *                      - categories: array<int>
+     *                      - areas: array<int>
+     *                      - tags: array<int>
+     *                      - invisible_tags: array<int>
+     *                      - per_page: int
+     *                      - page: int
      * @param array|string $fields Fields to retrieve, either as an array or GraphQL fields string
      * @return WpEntity[]
      */

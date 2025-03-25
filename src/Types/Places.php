@@ -33,18 +33,6 @@ class Places
      *                      - per_page: int
      *                      - page: int
      * @param array|string $fields Fields to retrieve, either as an array or GraphQL fields string
-     *                            For array format, use:
-     *                            [
-     *                              'places' => ['id', 'title', ...],
-     *                              'markers' => [
-     *                                'features' => [
-     *                                  'geometry' => ['coordinates', 'type'],
-     *                                  'properties' => ['icon', 'id', 'name', 'slug', 'thumbnail', 'type'],
-     *                                  'type'
-     *                                ],
-     *                                'type'
-     *                              ]
-     *                            ]
      * @return object{items: WpEntity[], markers: ?Markers} Returns an object containing WpEntity objects for places and a Markers object for map data
      */
     public function list(array $filter = [], array|string $fields = []): object
@@ -72,24 +60,6 @@ class Places
      * @param int $id Place ID
      * @param string $lang Language code (e.g., 'sv')
      * @param array|string $fields Fields to retrieve, either as an array or GraphQL fields string
-     *                            For array format, use:
-     *                            [
-     *                              'place' => ['id', 'title', ...],
-     *                              'events' => ['id', 'title', ...],
-     *                              'markers' => [
-     *                                'features' => [
-     *                                  'geometry' => ['coordinates', 'type'],
-     *                                  'properties' => ['icon', 'id', 'name', 'slug', 'thumbnail', 'type'],
-     *                                  'type'
-     *                                ],
-     *                                'type'
-     *                              ],
-     *                              'related' => [
-     *                                'events' => ['excerpt', 'title'],
-     *                                'guides' => ['excerpt', 'title'],
-     *                                'places' => ['excerpt', 'title']
-     *                              ]
-     *                            ]
      * @return object{place: WpEntity, events: WpEntity[], markers: ?Markers, related: ?Related}
      */
     public function getById(int $id, string $lang = 'sv', array|string $fields = []): object
