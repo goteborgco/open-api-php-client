@@ -9,6 +9,12 @@ use GBGCO\Types\Search;
 use GBGCO\Types\Taxonomies;
 use GBGCO\Types\Taxonomy;
 
+/**
+ * Main API client class for interacting with the Göteborg & Co GraphQL API
+ * 
+ * This class provides access to all API endpoints through type-safe methods
+ * and supports raw GraphQL queries for advanced use cases.
+ */
 class Api
 {
     private Client $client;
@@ -19,6 +25,12 @@ class Api
     private ?Taxonomies $taxonomies = null;
     private ?Taxonomy $taxonomy = null;
 
+    /**
+     * Initialize the API client
+     * 
+     * @param string $apiUrl The base URL for the GraphQL API
+     * @param string $subscriptionKey Your API subscription key
+     */
     public function __construct(string $apiUrl, string $subscriptionKey)
     {
         $this->client = new Client($apiUrl, $subscriptionKey);
@@ -29,7 +41,8 @@ class Api
      * 
      * @param string $query The complete GraphQL query
      * @return array The query result
-     * @throws \Exception If the query fails
+     * @throws \InvalidArgumentException If the query is empty
+     * @throws \Exception If the query execution fails
      */
     public function query(string $query): array
     {
@@ -41,7 +54,9 @@ class Api
     }
 
     /**
-     * Get the Guides API
+     * Get the Guides API for accessing guide content
+     * 
+     * @return Guides The Guides API instance
      */
     public function guides(): Guides
     {
@@ -51,6 +66,11 @@ class Api
         return $this->guides;
     }
 
+    /**
+     * Get the Events API for accessing event content
+     * 
+     * @return Events The Events API instance
+     */
     public function events(): Events
     {
         if ($this->events === null) {
@@ -59,6 +79,11 @@ class Api
         return $this->events;
     }
 
+    /**
+     * Get the Places API for accessing place content
+     * 
+     * @return Places The Places API instance
+     */
     public function places(): Places
     {
         if ($this->places === null) {
@@ -68,7 +93,9 @@ class Api
     }
 
     /**
-     * Get the Search API
+     * Get the Search API for performing content searches
+     * 
+     * @return Search The Search API instance
      */
     public function search(): Search
     {
@@ -79,7 +106,9 @@ class Api
     }
 
     /**
-     * Get the Taxonomies API
+     * Get the Taxonomies API for listing available taxonomies
+     * 
+     * @return Taxonomies The Taxonomies API instance
      */
     public function taxonomies(): Taxonomies
     {
@@ -91,6 +120,8 @@ class Api
 
     /**
      * Get the Taxonomy API for querying specific taxonomies
+     * 
+     * @return Taxonomy The Taxonomy API instance
      */
     public function taxonomy(): Taxonomy
     {

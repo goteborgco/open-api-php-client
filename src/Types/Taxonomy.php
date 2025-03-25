@@ -6,12 +6,23 @@ use GBGCO\Client;
 use GBGCO\Types\Entities\TaxonomyTerm;
 use GBGCO\Traits\GraphQLFieldsTrait;
 
+/**
+ * API client for querying specific taxonomies
+ * 
+ * This class provides methods for retrieving terms from specific taxonomies,
+ * with support for filtering, field selection, and hierarchical organization.
+ */
 class Taxonomy
 {
     use GraphQLFieldsTrait;
 
     private Client $client;
 
+    /**
+     * Initialize the taxonomy API client
+     * 
+     * @param Client $client The HTTP client for making API requests
+     */
     public function __construct(Client $client)
     {
         $this->client = $client;
@@ -22,12 +33,23 @@ class Taxonomy
      *
      * @param string $taxonomyName The name of the taxonomy to query (e.g. "categories")
      * @param array $filter Filter options:
-     *                      - lang: string ('en'|'sv')
-     * @param array|string $fields Fields to retrieve, either as an array or GraphQL fields string
+     *                      - lang: string ('en'|'sv') - Language filter
+     *                      - Other filters are passed directly to the API
+     * @param array|string $fields Fields to retrieve, either as:
+     *                            - A string in GraphQL format
+     *                            - An array of field names and nested selections
      * @param bool $hierarchical Whether to return terms in a hierarchical tree structure
-     * @return TaxonomyTerm[]|array Returns an array of TaxonomyTerm objects. If hierarchical is true,
-     *                              returns a nested array where each term has a 'children' key containing its child terms
-     * @throws \InvalidArgumentException If the language is invalid or taxonomyName is empty
+     * @return TaxonomyTerm[]|array When hierarchical is false:
+     *                              - Returns a flat array of TaxonomyTerm objects
+     *                              When hierarchical is true:
+     *                              - Returns a nested array where each node has:
+     *                                - 'term': TaxonomyTerm
+     *                                - 'children': array of child nodes
+     * @throws \InvalidArgumentException If:
+     *                                  - The taxonomy name is empty
+     *                                  - The language filter is invalid
+     *                                  - The fields selection is empty
+     * @throws \Exception If the API request fails
      */
     public function list(
         string $taxonomyName,
@@ -69,6 +91,11 @@ class Taxonomy
 
     /**
      * Build list query with filter and taxonomy name
+     * 
+     * @param string $taxonomyName Name of the taxonomy to query
+     * @param string $fields GraphQL fields selection string
+     * @param string $filterStr Filter arguments string
+     * @return string Complete GraphQL query
      */
     private function buildListQuery(string $taxonomyName, string $fields, string $filterStr): string
     {
@@ -87,7 +114,9 @@ class Taxonomy
      * Build a hierarchical tree structure from flat terms array
      * 
      * @param TaxonomyTerm[] $terms Flat array of taxonomy terms
-     * @return array Hierarchical array where each term has a 'term' and 'children' key
+     * @return array Hierarchical array where each node has:
+     *               - 'term': TaxonomyTerm - The term object
+     *               - 'children': array - Array of child nodes with the same structure
      */
     private function buildHierarchy(array $terms): array
     {
@@ -111,7 +140,9 @@ class Taxonomy
      * 
      * @param array $termsByParent Terms grouped by parent ID
      * @param int $parentId Current parent ID to process
-     * @return array Tree structure
+     * @return array Array of nodes, where each node has:
+     *               - 'term': TaxonomyTerm - The term object
+     *               - 'children': array - Array of child nodes
      */
     private function buildTree(array $termsByParent, int $parentId): array
     {

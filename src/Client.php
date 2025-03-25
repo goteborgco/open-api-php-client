@@ -6,12 +6,24 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 
+/**
+ * HTTP client for making GraphQL API requests
+ * 
+ * This class handles the low-level HTTP communication with the GraphQL API,
+ * including authentication, request formatting, and error handling.
+ */
 class Client
 {
     private string $apiUrl;
     private string $subscriptionKey;
     private GuzzleClient $httpClient;
 
+    /**
+     * Initialize the HTTP client
+     * 
+     * @param string $apiUrl The base URL for the GraphQL API
+     * @param string $subscriptionKey Your API subscription key
+     */
     public function __construct(string $apiUrl, string $subscriptionKey)
     {
         $this->apiUrl = $apiUrl;
@@ -27,9 +39,13 @@ class Client
     /**
      * Execute a GraphQL query
      *
-     * @param string $query The GraphQL query
-     * @return array The query results
-     * @throws \Exception
+     * @param string $query The GraphQL query to execute
+     * @return array The query results from the 'data' field of the GraphQL response
+     * @throws \Exception When:
+     *                    - JSON encoding/decoding fails
+     *                    - HTTP request fails (non-200 status)
+     *                    - GraphQL response contains errors
+     *                    - Network or other errors occur
      */
     public function execute(string $query): array
     {

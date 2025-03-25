@@ -6,24 +6,42 @@ use GBGCO\Client;
 use GBGCO\Types\Entities\Taxonomy;
 use GBGCO\Traits\GraphQLFieldsTrait;
 
+/**
+ * API client for listing available taxonomies
+ * 
+ * This class provides methods for retrieving information about all available
+ * taxonomies in the system, such as categories, tags, and other classification types.
+ */
 class Taxonomies
 {
     use GraphQLFieldsTrait;
 
     private Client $client;
 
+    /**
+     * Initialize the taxonomies API client
+     * 
+     * @param Client $client The HTTP client for making API requests
+     */
     public function __construct(Client $client)
     {
         $this->client = $client;
     }
 
     /**
-     * List all taxonomies
+     * List all available taxonomies
      *
      * @param array $filter Filter options:
-     *                      - lang: string ('en'|'sv')
-     * @param array|string $fields Fields to retrieve, either as an array or GraphQL fields string
-     * @return Taxonomy[] Returns an array of Taxonomy objects
+     *                      - lang: string ('en'|'sv') - Language filter
+     *                      - Other filters are passed directly to the API
+     * @param array|string $fields Fields to retrieve, either as:
+     *                            - A string in GraphQL format
+     *                            - An array of field names and nested selections
+     * @return Taxonomy[] Array of Taxonomy objects, each representing a taxonomy type
+     * @throws \InvalidArgumentException If:
+     *                                  - The language filter is invalid
+     *                                  - The fields selection is empty
+     * @throws \Exception If the API request fails
      */
     public function list(array $filter = [], array|string $fields = []): array
     {
@@ -55,6 +73,10 @@ class Taxonomies
 
     /**
      * Build list query with filter
+     * 
+     * @param string $fields GraphQL fields selection string
+     * @param string $filterStr Filter arguments string
+     * @return string Complete GraphQL query
      */
     private function buildListQuery(string $fields, string $filterStr): string
     {
