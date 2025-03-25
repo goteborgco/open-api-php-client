@@ -5,9 +5,12 @@ namespace GBGCO\Types;
 use GBGCO\Client;
 use GBGCO\Types\Entities\WpEntity;
 use GBGCO\Types\Entities\Related;
+use GBGCO\Traits\GraphQLFieldsTrait;
 
 class Guides
 {
+    use GraphQLFieldsTrait;
+
     private Client $client;
 
     public function __construct(Client $client)
@@ -58,62 +61,6 @@ class Guides
             'guide' => new WpEntity($data['guide'] ?? []),
             'related' => isset($data['related']) ? new Related($data['related']) : null
         ];
-    }
-
-    /**
-     * Get fields string, handling both array and string inputs
-     * 
-     * @param array|string $fields Fields to retrieve
-     * @return string
-     * @throws \InvalidArgumentException When empty fields are provided
-     */
-    private function getFieldsString(array|string $fields): string
-    {
-        if ((is_string($fields) && empty($fields)) || (is_array($fields) && empty($fields))) {
-            throw new \InvalidArgumentException('Fields cannot be empty');
-        }
-
-        if (is_string($fields)) {
-            return $fields;
-        }
-
-        return $this->buildFieldsString($fields);
-    }
-
-    /**
-     * Build GraphQL fields string from array
-     */
-    private function buildFieldsString(array $fields, int $indent = 0): string
-    {
-        $result = [];
-        $indentStr = str_repeat('    ', $indent);
-        
-        foreach ($fields as $key => $value) {
-            if (is_array($value)) {
-                $nestedFields = $this->buildFieldsString($value, $indent + 1);
-                $result[] = "$indentStr$key {\n$nestedFields\n$indentStr}";
-            } else {
-                $result[] = "$indentStr$value";
-            }
-        }
-
-        return implode("\n", $result);
-    }
-
-    /**
-     * Build filter arguments string from array
-     */
-    private function buildFilterString(array $filter): string
-    {
-        $filterArgs = [];
-        foreach ($filter as $key => $value) {
-            if (is_string($value)) {
-                $filterArgs[] = "$key: \"$value\"";
-            } else {
-                $filterArgs[] = "$key: $value";
-            }
-        }
-        return implode(', ', $filterArgs);
     }
 
     /**

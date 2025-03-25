@@ -3,11 +3,15 @@
 namespace GBGCO;
 
 use GBGCO\Types\Guides;
+use GBGCO\Types\Events;
+use GBGCO\Types\Places;
 
 class Api
 {
     private Client $client;
     private ?Guides $guides = null;
+    private ?Events $events = null;
+    private ?Places $places = null;
 
     public function __construct(string $apiUrl, string $subscriptionKey)
     {
@@ -39,5 +43,21 @@ class Api
             $this->guides = new Guides($this->client);
         }
         return $this->guides;
+    }
+
+    public function events(): Events
+    {
+        if ($this->events === null) {
+            $this->events = new Events($this->client);
+        }
+        return $this->events;
+    }
+
+    public function places(): Places
+    {
+        if ($this->places === null) {
+            $this->places = new Places($this->client);
+        }
+        return $this->places;
     }
 } 
