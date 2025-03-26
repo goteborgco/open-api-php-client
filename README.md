@@ -1,14 +1,13 @@
 # Göteborg & Co Open API PHP SDK
 
-Official PHP SDK for interacting with the Göteborg & Co GraphQL API. This composer package provides a convenient way to access Göteborg & Co's data platform, offering both type-safe methods for common operations and flexible raw GraphQL query capabilities.
+Official PHP SDK for interacting with the Göteborg & Co GraphQL API. This composer package provides a convenient way to access data from Göteborg & Co's open API, offering both type-safe methods for common operations and flexible raw GraphQL query capabilities.
 
 ## Features
 
-- Type-safe methods for common operations (guides, events, places)
+- Type-safe methods for common operations (guides, events, places, search and taxonomies)
 - Direct GraphQL query support for advanced use cases
 - Built-in error handling and response parsing
 - Comprehensive documentation and examples
-- Modern PHP 7.4+ with type hints
 
 ## Installation
 
@@ -42,46 +41,116 @@ While the general query method provides full flexibility, the API also includes 
 - Default values for common use cases
 - Full IDE support with autocompletion
 
-### Guides
-
-The API provides methods to list guides and retrieve individual guides by ID. All responses are mapped to proper PHP classes for type safety.
-
 #### Entity Types
 
 The following entity types are available:
 
 - `WpEntity`: Base entity for guides, events, and places
-  - `getId(): int`
-  - `getTitle(): ?string`
-  - `getExcerpt(): ?string`
-  - `getContent(): ?string`
-  - `getFeaturedMedia(): Media[]`
-  - `getLocation(): ?Location`
-  - `getContact(): ?Contact`
-  - `getDates(): EventDate[]`
-  
+  - `getId(): int` - Get the WordPress post ID
+  - `getDate(): ?string` - Get the creation date in ISO 8601 format
+  - `getModified(): ?string` - Get the last modification date in ISO 8601 format
+  - `getType(): ?string` - Get the content type (e.g., 'event', 'place', 'guide')
+  - `getLink(): ?string` - Get the public URL of the content item
+  - `getTitle(): ?string` - Get the content title
+  - `getContent(): ?string` - Get the main content (may contain HTML)
+  - `getExcerpt(): ?string` - Get a brief summary of the content
+  - `getCategories(): array` - Get array of category IDs
+  - `getAreas(): array` - Get array of area IDs
+  - `getTags(): array` - Get array of tag IDs
+  - `getInvisibleTags(): array` - Get array of invisible tag IDs (for internal use)
+  - `getLang(): string` - Get the language code ('en'|'sv')
+  - `getTranslations(): ?Translations` - Get available translations
+  - `getFeaturedMedia(): Media[]` - Get array of featured media objects
+  - `getCategoryHeading(): ?string` - Get optional category heading
+  - `getGallery(): Media[]` - Get array of gallery media objects
+  - `getContact(): ?Contact` - Get contact information
+  - `getLocation(): ?Location` - Get location information
+  - `isFree(): ?bool` - Check if admission is free (for events)
+  - `getDates(): EventDate[]` - Get array of event dates
+  - `getPlaceId(): ?int` - Get associated place ID (for events)
+  - `getClassification(): ?int` - Get classification value
+  - `getCurrentInTime(): ?CurrentInTime` - Get temporal availability information
+
 - `Location`: Location information
-  - `getAddress(): ?string`
-  - `getLat(): ?float`
-  - `getLng(): ?float`
-  - `getName(): ?string`
-  
+  - `getAddress(): ?string` - Get complete address string
+  - `getLat(): ?float` - Get latitude coordinate
+  - `getLng(): ?float` - Get longitude coordinate
+  - `getZoom(): ?int` - Get default map zoom level
+  - `getPlaceId(): ?string` - Get Google Places ID
+  - `getName(): ?string` - Get location/establishment name
+  - `getStreetNumber(): ?string` - Get street number
+  - `getStreetName(): ?string` - Get street name
+  - `getState(): ?string` - Get state/region
+  - `getPostCode(): ?string` - Get postal code
+  - `getCountry(): ?string` - Get full country name
+  - `getCountryShort(): ?string` - Get two-letter country code (ISO 3166-1 alpha-2)
+
 - `Media`: Media assets
-  - `getId(): int`
-  - `getCaption(): ?string`
-  - `getAltText(): ?string`
-  - `getSizes(): ?MediaSizes`
-  
+  - `getId(): int` - Get media item ID
+  - `getCredit(): ?string` - Get attribution information
+  - `getCaption(): ?string` - Get media description
+  - `getAltText(): ?string` - Get alternative text for accessibility
+  - `getMediaType(): ?string` - Get type of media (e.g., 'image', 'video')
+  - `getMimeType(): ?string` - Get MIME type of the media file
+  - `getSizes(): ?MediaSizes` - Get available size variations
+
 - `MediaSizes`: Image size variants
-  - `getFull(): ?Image`
-  - `getLarge(): ?Image`
-  - `getMedium(): ?Image`
-  - `getThumbnail(): ?Image`
-  
+  - `getMedium(): ?Image` - Get medium size version
+  - `getThumbnail(): ?Image` - Get thumbnail version
+  - `getLarge(): ?Image` - Get large size version
+  - `getFull(): ?Image` - Get full/original size version
+
 - `Image`: Individual image properties
-  - `getWidth(): int`
-  - `getHeight(): int`
-  - `getSourceUrl(): string`
+  - `getWidth(): int` - Get width in pixels
+  - `getHeight(): int` - Get height in pixels
+  - `getSourceUrl(): string` - Get URL where the image can be accessed
+
+- `Contact`: Contact information
+  - `getEmail(): ?string` - Get contact email address
+  - `getPhone(): ?string` - Get contact phone number
+  - `getWebsite(): ?string` - Get website URL
+  - `getFacebook(): ?string` - Get Facebook profile/page URL
+  - `getInstagram(): ?string` - Get Instagram profile URL
+
+- `EventDate`: Date range for events
+  - `getStart(): ?string` - Get start date in ISO 8601 format
+  - `getEnd(): ?string` - Get end date in ISO 8601 format
+
+- `CurrentInTime`: Temporal availability information
+  - `getMonths(): array` - Get array of month numbers (1-12) when item is active
+  - `getWeekdays(): array` - Get array of weekday numbers (0-6) when item is active
+
+- `Features`: GeoJSON Feature
+  - `getType(): string` - Get GeoJSON object type
+  - `getGeometry(): Geometry` - Get geometric data
+  - `getProperties(): Properties` - Get feature properties
+
+- `Geometry`: GeoJSON geometry
+  - `getType(): string` - Get geometry type (e.g., 'Point', 'LineString', 'Polygon')
+  - `getCoordinates(): array` - Get coordinates in GeoJSON format
+  - `getLatitude(): ?float` - Get latitude (for Point geometries)
+  - `getLongitude(): ?float` - Get longitude (for Point geometries)
+
+- `Properties`: GeoJSON feature properties
+  - `getName(): string` - Get feature display name
+  - `getId(): int` - Get unique identifier
+  - `getIcon(): string` - Get icon URL/identifier
+  - `getThumbnail(): string` - Get thumbnail image URL
+  - `getType(): string` - Get feature classification type
+  - `getSlug(): string` - Get URL-friendly identifier
+
+- `Markers`: GeoJSON FeatureCollection
+  - `getType(): string` - Get GeoJSON object type (typically 'FeatureCollection')
+  - `getFeatures(): Features[]` - Get array of Feature objects
+
+- `Related`: Related content collection
+  - `getPlaces(): WpEntity[]` - Get array of related place entities
+  - `getGuides(): WpEntity[]` - Get array of related guide entities
+  - `getEvents(): WpEntity[]` - Get array of related event entities
+
+- `Translations`: Content translations
+  - `getSv(): ?int` - Get ID of Swedish content version
+  - `getEn(): ?int` - Get ID of English content version
 
 #### Listing Guides
 
@@ -89,22 +158,24 @@ List guides using GraphQL field selection:
 
 ```php
 $fields = <<<GQL
-    id
-    title
-    excerpt
-    areas
-    categories
-    category_heading
-    dates {
-        end
-        start
-    }
-    featuredmedia {
-        sizes {
-            full {
-                height
-                source_url
-                width
+    guides {
+        id
+        title
+        excerpt
+        areas
+        categories
+        category_heading
+        dates {
+            end
+            start
+        }
+        featuredmedia {
+            sizes {
+                full {
+                    height
+                    source_url
+                    width
+                }
             }
         }
     }
