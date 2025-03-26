@@ -2,11 +2,12 @@
     "name": "goteborgco/open-api-php-client",
     "description": "Official PHP client library for interacting with the Göteborg & Co GraphQL API",
     "type": "library",
+    "license": "MIT",
+    "version": "1.0.0",
     "require": {
         "php": ">=8.1",
         "guzzlehttp/guzzle": "^7.0"
     },
-    "license": "MIT",
     "autoload": {
         "psr-4": {
             "GBGCO\\": "src/"
@@ -19,8 +20,5 @@
             "role": "Developer"
         }
     ],
-    "minimum-stability": "stable",
-    "exclude-from-classmap": [
-        "/index.php"
-    ]
+    "minimum-stability": "stable"
 } 

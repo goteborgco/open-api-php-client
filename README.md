@@ -9,6 +9,11 @@ Official PHP client library for interacting with the Göteborg & Co GraphQL API.
 - Built-in error handling and response parsing
 - Comprehensive documentation and examples
 
+## Requirements
+
+- [PHP](https://secure.php.net/manual/en/install.php) >= 8.1
+- [Composer](https://getcomposer.org/download/)
+
 ## Installation
 
 Install the package via composer:
