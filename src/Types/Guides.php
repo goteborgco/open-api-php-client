@@ -103,9 +103,7 @@ class Guides
         return <<<GQL
         query {
             guides {
-                guides {
-                    $fields
-                }
+                $fields
             }
         }
         GQL;
@@ -123,9 +121,7 @@ class Guides
         return <<<GQL
         query {
             guides(filter: { $filterStr }) {
-                guides {
-                    $fields
-                }
+                $fields
             }
         }
         GQL;

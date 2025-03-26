@@ -103,9 +103,7 @@ class Search
         return <<<GQL
         query {
             search($paramsStr) {
-                results {
-                    $fields
-                }
+                $fields
             }
         }
         GQL;
