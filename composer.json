@@ -3,7 +3,7 @@
     "description": "Official PHP SDK for Göteborg & Co's GraphQL Open API",
     "type": "library",
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "guzzlehttp/guzzle": "^7.0"
     },
     "license": "MIT",
