@@ -1,6 +1,6 @@
-# Göteborg & Co Open API PHP SDK
+# Göteborg & Co API Client for PHP
 
-Official PHP SDK for interacting with the Göteborg & Co GraphQL API. This composer package provides a convenient way to access data from Göteborg & Co's open API, offering both type-safe methods for common operations and flexible raw GraphQL query capabilities.
+Official PHP client library for interacting with the Göteborg & Co GraphQL API. This package provides a type-safe interface for accessing Göteborg & Co's API, offering both structured methods for common operations and flexible GraphQL query capabilities.
 
 ## Features
 
@@ -14,12 +14,12 @@ Official PHP SDK for interacting with the Göteborg & Co GraphQL API. This compo
 Install the package via composer:
 
 ```bash
-composer require goteborgco/open-api-php-sdk
+composer require goteborgco/open-api-php-client
 ```
 
 ## Setup
 
-Initialize the API SDK with your API URL and subscription key:
+Initialize the API Client with your API URL and subscription key:
 
 ```php
 use GBGCO\API;

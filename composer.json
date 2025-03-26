@@ -1,6 +1,6 @@
 {
-    "name": "goteborgco/open-api-php-sdk",
-    "description": "Official PHP SDK for Göteborg & Co's GraphQL Open API",
+    "name": "goteborgco/open-api-php-client",
+    "description": "Official PHP client library for interacting with the Göteborg & Co GraphQL API",
     "type": "library",
     "require": {
         "php": ">=8.1",
