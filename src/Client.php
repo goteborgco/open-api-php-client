@@ -31,7 +31,8 @@ class Client
         $this->httpClient = new GuzzleClient([
             'headers' => [
                 'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
+                'Accept' => 'application/json',
+                'Ocp-Apim-Subscription-Key' => $subscriptionKey
             ]
         ]);
     }
@@ -50,15 +51,13 @@ class Client
     public function execute(string $query): array
     {
         try {
-            $url = $this->apiUrl . '?subscription-key=' . urlencode($this->subscriptionKey);
-            
             $payload = json_encode(['query' => $query]);
             
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new \Exception('Failed to encode GraphQL payload: ' . json_last_error_msg());
             }
 
-            $response = $this->httpClient->post($url, [
+            $response = $this->httpClient->post($this->apiUrl, [
                 RequestOptions::BODY => $payload
             ]);
 
